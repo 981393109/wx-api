@@ -65,7 +65,9 @@ public class WxUser implements Serializable {
 			this.tagidList=JSONArray.parseArray(JSONObject.toJSONString(wxMpUser.getTagIds()));
 			this.subscribeScene=wxMpUser.getSubscribeScene();
 			String qrScene =  wxMpUser.getQrScene();
-			this.qrSceneStr= StringUtils.isEmpty(qrScene) ? wxMpUser.getQrSceneStr() : qrScene;
+            System.out.println("**************"+qrScene);
+			this.qrSceneStr= !StringUtils.isEmpty(qrScene) ? wxMpUser.getQrSceneStr() : qrScene;
+            System.out.println("**************"+this.qrSceneStr);
 		}
     }
 

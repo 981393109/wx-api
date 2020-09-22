@@ -3,6 +3,8 @@ package com.github.niefy.modules.wx.manage;
 import java.util.Arrays;
 import java.util.Map;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import com.github.niefy.common.utils.R;
  */
 @RestController
 @RequestMapping("/manage/templateMsgLog")
+@Api(tags = "模版消息发送记录")
 public class TemplateMsgLogManageController {
     @Autowired
     private TemplateMsgLogService templateMsgLogService;
@@ -33,7 +36,8 @@ public class TemplateMsgLogManageController {
      * 列表
      */
     @GetMapping("/list")
-    @RequiresPermissions("wx:templatemsglog:list")
+    @ApiOperation("获取模版消息发送记录列表")
+//    @RequiresPermissions("wx:templatemsglog:list")
     public R list(@CookieValue String appid,@RequestParam Map<String, Object> params) {
         params.put("appid",appid);
         PageUtils page = templateMsgLogService.queryPage(params);
@@ -45,8 +49,9 @@ public class TemplateMsgLogManageController {
     /**
      * 信息
      */
+    @ApiOperation("获取模版消息发送记录信息")
     @GetMapping("/info/{logId}")
-    @RequiresPermissions("wx:templatemsglog:info")
+//    @RequiresPermissions("wx:templatemsglog:info")
     public R info(@CookieValue String appid,@PathVariable("logId") Integer logId) {
         TemplateMsgLog templateMsgLog = templateMsgLogService.getById(logId);
 
@@ -57,7 +62,8 @@ public class TemplateMsgLogManageController {
      * 保存
      */
     @PostMapping("/save")
-    @RequiresPermissions("wx:templatemsglog:save")
+    @ApiOperation("保存模版消息发送记录")
+//    @RequiresPermissions("wx:templatemsglog:save")
     public R save(@CookieValue String appid,@RequestBody TemplateMsgLog templateMsgLog) {
         templateMsgLogService.save(templateMsgLog);
 
@@ -68,7 +74,8 @@ public class TemplateMsgLogManageController {
      * 修改
      */
     @PostMapping("/update")
-    @RequiresPermissions("wx:templatemsglog:update")
+    @ApiOperation("修改模版消息发送记录")
+//    @RequiresPermissions("wx:templatemsglog:update")
     public R update(@CookieValue String appid,@RequestBody TemplateMsgLog templateMsgLog) {
         templateMsgLogService.updateById(templateMsgLog);
 
@@ -79,7 +86,8 @@ public class TemplateMsgLogManageController {
      * 删除
      */
     @PostMapping("/delete")
-    @RequiresPermissions("wx:templatemsglog:delete")
+    @ApiOperation("删除模版消息发送记录")
+//    @RequiresPermissions("wx:templatemsglog:delete")
     public R delete(@CookieValue String appid,@RequestBody Integer[] logIds) {
         templateMsgLogService.removeByIds(Arrays.asList(logIds));
 

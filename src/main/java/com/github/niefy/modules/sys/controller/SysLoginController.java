@@ -6,6 +6,8 @@ import com.github.niefy.modules.sys.form.SysLoginForm;
 import com.github.niefy.modules.sys.service.SysCaptchaService;
 import com.github.niefy.modules.sys.service.SysUserService;
 import com.github.niefy.modules.sys.service.SysUserTokenService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import java.util.Map;
  * @author Mark sunlightcs@gmail.com
  */
 @RestController
+@Api(tags = "用户登入")
 public class SysLoginController extends AbstractController {
     @Autowired
     private SysUserService sysUserService;
@@ -36,6 +39,7 @@ public class SysLoginController extends AbstractController {
     /**
      * 验证码
      */
+    @ApiOperation("验证码")
     @GetMapping("captcha.jpg")
     public void captcha(HttpServletResponse response, String uuid) throws IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
@@ -54,18 +58,19 @@ public class SysLoginController extends AbstractController {
     /**
      * 登录
      */
+    @ApiOperation("登入")
     @PostMapping("/sys/login")
     public Map<String, Object> login(@RequestBody SysLoginForm form) {
-        boolean captcha = sysCaptchaService.validate(form.getUuid(), form.getCaptcha());
-        if (!captcha) {
-            return R.error("验证码不正确");
-        }
+//        boolean captcha = sysCaptchaService.validate(form.getUuid(), form.getCaptcha());
+//        if (!captcha) {
+//            return R.error("验证码不正确");
+//        }
 
         //用户信息
         SysUserEntity user = sysUserService.queryByUserName(form.getUsername());
 
         //账号不存在、密码错误
-        if (user == null || !user.getPassword().equals(new Sha256Hash(form.getPassword(), user.getSalt()).toHex())) {
+        if (user == null || !user.getPassword().equals(new Sha256Hash(form.getPassword(), user.getSalt()).toHex())) {//解密
             return R.error("账号或密码不正确");
         }
 

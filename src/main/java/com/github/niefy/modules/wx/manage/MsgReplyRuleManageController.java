@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.github.niefy.modules.wx.service.MsgReplyRuleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import com.github.niefy.common.utils.R;
  */
 @RestController
 @RequestMapping("/manage/msgReplyRule")
+@Api(tags = "自动回复规则")
 public class MsgReplyRuleManageController {
     @Autowired
     private MsgReplyRuleService msgReplyRuleService;
@@ -32,8 +35,9 @@ public class MsgReplyRuleManageController {
     /**
      * 列表
      */
+    @ApiOperation("自动回复规则列表")
     @GetMapping("/list")
-    @RequiresPermissions("wx:msgreplyrule:list")
+//    @RequiresPermissions("wx:msgreplyrule:list")
     public R list(@CookieValue String appid,@RequestParam Map<String, Object> params) {
         params.put("appid",appid);
         PageUtils page = msgReplyRuleService.queryPage(params);
@@ -45,8 +49,9 @@ public class MsgReplyRuleManageController {
     /**
      * 信息
      */
+    @ApiOperation("自动回复规则信息")
     @GetMapping("/info/{ruleId}")
-    @RequiresPermissions("wx:msgreplyrule:info")
+//    @RequiresPermissions("wx:msgreplyrule:info")
     public R info(@PathVariable("ruleId") Integer ruleId) {
         MsgReplyRule msgReplyRule = msgReplyRuleService.getById(ruleId);
 
@@ -56,8 +61,9 @@ public class MsgReplyRuleManageController {
     /**
      * 保存
      */
+    @ApiOperation("保存自动回复规则")
     @PostMapping("/save")
-    @RequiresPermissions("wx:msgreplyrule:save")
+//    @RequiresPermissions("wx:msgreplyrule:save")
     public R save(@RequestBody MsgReplyRule msgReplyRule) {
         msgReplyRuleService.save(msgReplyRule);
 
@@ -67,8 +73,9 @@ public class MsgReplyRuleManageController {
     /**
      * 修改
      */
+    @ApiOperation("修改自动回复规则")
     @PostMapping("/update")
-    @RequiresPermissions("wx:msgreplyrule:update")
+//    @RequiresPermissions("wx:msgreplyrule:update")
     public R update(@RequestBody MsgReplyRule msgReplyRule) {
         msgReplyRuleService.updateById(msgReplyRule);
 
@@ -78,8 +85,9 @@ public class MsgReplyRuleManageController {
     /**
      * 删除
      */
+    @ApiOperation("删除自动回复规则")
     @PostMapping("/delete")
-    @RequiresPermissions("wx:msgreplyrule:delete")
+//    @RequiresPermissions("wx:msgreplyrule:delete")
     public R delete(@RequestBody Integer[] ruleIds) {
         msgReplyRuleService.removeByIds(Arrays.asList(ruleIds));
 

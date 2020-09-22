@@ -5,6 +5,8 @@ import com.github.niefy.modules.wx.service.WxQrCodeService;
 import com.github.niefy.common.utils.PageUtils;
 import com.github.niefy.common.utils.R;
 import com.github.niefy.modules.wx.entity.WxQrCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
@@ -23,6 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/manage/wxQrCode")
+@Api(tags = "公众号带参二维码管理")
 public class WxQrCodeManageController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -34,9 +37,10 @@ public class WxQrCodeManageController {
     /**
      * 创建带参二维码ticket
      */
+    @ApiOperation("创建带参二维码ticket")
     @PostMapping("/createTicket")
-    @RequiresPermissions("wx:wxqrcode:save")
-    public R createTicket(@CookieValue String appid,@RequestBody WxQrCodeForm form) throws WxErrorException {
+//    @RequiresPermissions("wx:wxqrcode:save")
+    public R createTicket( String appid,@RequestBody WxQrCodeForm form) throws WxErrorException {
         wxMpService.switchoverTo(appid);
         WxMpQrCodeTicket ticket = wxQrCodeService.createQrCode(appid,form);
         return R.ok().put(ticket);
@@ -46,8 +50,9 @@ public class WxQrCodeManageController {
      * 列表
      */
     @GetMapping("/list")
-    @RequiresPermissions("wx:wxqrcode:list")
-    public R list(@CookieValue String appid,@RequestParam Map<String, Object> params) {
+    @ApiOperation("获取列表")
+//    @RequiresPermissions("wx:wxqrcode:list")
+    public R list(@RequestParam String appid,@RequestParam Map<String, Object> params) {
         params.put("appid",appid);
         PageUtils page = wxQrCodeService.queryPage(params);
 
@@ -59,7 +64,8 @@ public class WxQrCodeManageController {
      * 信息
      */
     @GetMapping("/info/{id}")
-    @RequiresPermissions("wx:wxqrcode:info")
+    @ApiOperation("获取详情")
+//    @RequiresPermissions("wx:wxqrcode:info")
     public R info(@CookieValue String appid,@PathVariable("id") Long id) {
         WxQrCode wxQrCode = wxQrCodeService.getById(id);
 
@@ -69,8 +75,9 @@ public class WxQrCodeManageController {
     /**
      * 删除
      */
+    @ApiOperation("删除二维码")
     @PostMapping("/delete")
-    @RequiresPermissions("wx:wxqrcode:delete")
+//    @RequiresPermissions("wx:wxqrcode:delete")
     public R delete(@CookieValue String appid,@RequestBody Long[] ids) {
         wxQrCodeService.removeByIds(Arrays.asList(ids));
 

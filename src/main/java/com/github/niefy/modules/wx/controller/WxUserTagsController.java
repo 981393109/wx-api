@@ -5,6 +5,8 @@ import com.github.niefy.modules.wx.entity.WxUser;
 import com.github.niefy.modules.wx.form.WxUserTaggingForm;
 import com.github.niefy.modules.wx.service.WxUserService;
 import com.github.niefy.modules.wx.service.WxUserTagsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/wxUserTags")
 @RequiredArgsConstructor
+@Api(tags = "粉丝标签相关接口")
 public class WxUserTagsController {
     @Autowired
     WxUserTagsService wxUserTagsService;
@@ -25,6 +28,7 @@ public class WxUserTagsController {
     WxUserService wxUserService;
     private final WxMpService wxMpService;
 
+    @ApiOperation("得到粉丝标签")
     @GetMapping("/userTags")
     public R userTags(@CookieValue String appid,@CookieValue String openid){
         if(openid==null){
@@ -41,6 +45,7 @@ public class WxUserTagsController {
         return R.ok().put(wxUser.getTagidList());
     }
 
+    @ApiOperation("设置标签")
     @PostMapping("/tagging")
     public R tagging(@CookieValue String appid,@CookieValue String openid , @RequestBody WxUserTaggingForm form) {
         this.wxMpService.switchoverTo(appid);
@@ -57,6 +62,7 @@ public class WxUserTagsController {
         return R.ok();
     }
 
+    @ApiOperation("取消标签")
     @PostMapping("/untagging")
     public R untagging(@CookieValue String appid,@CookieValue String openid , @RequestBody WxUserTaggingForm form) throws WxErrorException {
         this.wxMpService.switchoverTo(appid);

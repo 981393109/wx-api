@@ -35,6 +35,7 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
     private WxUserMapper userMapper;
     @Autowired
     private WxMpService wxService;
+
     private volatile static  boolean syncWxUserTaskRunning=false;
 
     @Override
@@ -120,19 +121,19 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
     @Override
 	@Async
     public void syncWxUsers(String appid) {
-    	if(syncWxUserTaskRunning) {
+    	if(syncWxUserTaskRunning) {//加了volatile使线程可见性
             return;//同步较慢，防止个多线程重复执行同步任务
         }
 		syncWxUserTaskRunning=true;
 		logger.info("同步公众号粉丝列表：任务开始");
-		wxService.switchover(appid);
+		wxService.switchover(appid);//进行相应的公众号切换
 		boolean hasMore=true;
 		String nextOpenid=null;
-		WxMpUserService wxMpUserService = wxService.getUserService();
+		WxMpUserService wxMpUserService = wxService.getUserService();//返回wx用户方法
 		try {
 			int page=1;
 			while (hasMore){
-				WxMpUserList wxMpUserList = wxMpUserService.userList(nextOpenid);//拉取openid列表，每次最多1万个
+				WxMpUserList wxMpUserList = wxMpUserService.userList(nextOpenid);//拉取openid列表，每次最多1万个  nextOpenid为null从头开始拉去
 				logger.info("拉取openid列表：第{}页，数量：{}",page++,wxMpUserList.getCount());
 				List<String> openids = wxMpUserList.getOpenids();
 				this.syncWxUsers(openids,appid);
@@ -164,10 +165,13 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
 			final List<String> subOpenids=openids.subList(finalStart,finalEnd);
 			TaskExcutor.submit(()->{//使用线程池同步数据，否则大量粉丝数据需同步时会很慢
 				logger.info("同步批次:【{}--{}-{}】，数量：{}",batch, finalStart, finalEnd,subOpenids.size());
-				wxService.switchover(appid);
+				wxService.switchover(appid);//切换公众号
 				List<WxMpUser> wxMpUsers = null;//批量获取用户信息，每次最多100个
 				try {
-					wxMpUsers = wxMpUserService.userInfoList(subOpenids);
+					wxMpUsers = wxMpUserService.userInfoList(subOpenids);//根据用户openId得到用户的详情信息
+                    wxMpUsers.forEach(e->{
+                        logger.info("同步用户：{}",e);
+                    });
 				} catch (WxErrorException e) {
 					logger.error("同步出错，批次：【{}--{}-{}】，错误信息：{}",batch, finalStart, finalEnd,e);
 				}

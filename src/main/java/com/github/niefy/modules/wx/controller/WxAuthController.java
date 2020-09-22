@@ -4,6 +4,8 @@ import com.github.niefy.common.utils.*;
 import com.github.niefy.modules.sys.service.SysLogService;
 import com.github.niefy.modules.wx.entity.WxUser;
 import com.github.niefy.modules.wx.form.WxH5OuthrizeForm;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -27,6 +29,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/wxAuth")
 @RequiredArgsConstructor
+@Api(tags = "微信网页授权相关")
 public class WxAuthController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
@@ -41,6 +44,7 @@ public class WxAuthController {
      * @param form
      * @return
      */
+    @ApiOperation("使用微信授权code换取openid")
     @PostMapping("/codeToOpenid")
     @CrossOrigin
     public R codeToOpenid(HttpServletRequest request, HttpServletResponse response,
@@ -67,6 +71,7 @@ public class WxAuthController {
      * @param form
      * @return
      */
+    @ApiOperation("使用微信授权code换取用户信息(需scope为 snsapi_userinfo)")
     @PostMapping("/codeToUserInfo")
     @CrossOrigin
     public R codeToUserInfo(HttpServletRequest request, HttpServletResponse response,

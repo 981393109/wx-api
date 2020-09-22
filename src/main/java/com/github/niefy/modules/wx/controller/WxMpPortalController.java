@@ -1,5 +1,7 @@
 package com.github.niefy.modules.wx.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -17,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/wx/msg/{appid}")
+@Api(tags = "微信消息相关接口")
 public class WxMpPortalController {
     private final WxMpService wxService;
     private final WxMpMessageRouter messageRouter;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @ApiOperation("")
     @GetMapping(produces = "text/plain;charset=utf-8")
     public String authGet(@PathVariable String appid,
                           @RequestParam(name = "signature", required = false) String signature,

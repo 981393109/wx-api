@@ -5,6 +5,8 @@ import com.github.niefy.modules.wx.form.WxUserBatchTaggingForm;
 import com.github.niefy.modules.wx.form.WxUserTagForm;
 import com.github.niefy.modules.wx.service.WxUserService;
 import com.github.niefy.modules.wx.service.WxUserTagsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.tag.WxUserTag;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/manage/wxUserTags")
+@Api(tags = "微信用户标签")
 public class WxUserTagsManageController {
     @Autowired
     private WxUserService wxUserService;
@@ -28,9 +31,11 @@ public class WxUserTagsManageController {
      * 查询用户标签
      */
     @GetMapping("/list")
-    @RequiresPermissions("wx:wxuser:info")
-    public R list(@CookieValue String appid) throws WxErrorException {
+    @ApiOperation("查询用户标签")
+//    @RequiresPermissions("wx:wxuser:info")
+    public R list(@RequestParam String appid) throws WxErrorException {
         wxMpService.switchoverTo(appid);
+        System.out.println("************");
         List<WxUserTag> wxUserTags =  wxUserTagsService.getWxTags();
         return R.ok().put("list",wxUserTags);
     }
@@ -39,8 +44,9 @@ public class WxUserTagsManageController {
      * 修改或新增标签
      */
     @PostMapping("/save")
-    @RequiresPermissions("wx:wxuser:save")
-    public R save(@CookieValue String appid,@RequestBody WxUserTagForm form) throws WxErrorException{
+    @ApiOperation("修改或新增标签")
+//    @RequiresPermissions("wx:wxuser:save")
+    public R save(@RequestParam String appid,@RequestBody WxUserTagForm form) throws WxErrorException{
         wxMpService.switchoverTo(appid);
         Long tagid = form.getId();
         if(tagid==null || tagid<=0){
@@ -55,8 +61,9 @@ public class WxUserTagsManageController {
      * 删除标签
      */
     @PostMapping("/delete/{tagid}")
-    @RequiresPermissions("wx:wxuser:save")
-    public R delete(@CookieValue String appid,@PathVariable("tagid") Long tagid) throws WxErrorException{
+    @ApiOperation("删除标签")
+//    @RequiresPermissions("wx:wxuser:save")
+    public R delete(@RequestParam String appid,@PathVariable("tagid") Long tagid) throws WxErrorException{
         if(tagid==null || tagid<=0){
             return R.error("标签ID不得为空");
         }
@@ -69,8 +76,9 @@ public class WxUserTagsManageController {
      * 批量给用户打标签
      */
     @PostMapping("/batchTagging")
-    @RequiresPermissions("wx:wxuser:save")
-    public R batchTagging(@CookieValue String appid,@RequestBody WxUserBatchTaggingForm form) throws WxErrorException{
+    @ApiOperation("批量给用户打标签")
+//    @RequiresPermissions("wx:wxuser:save")
+    public R batchTagging(@RequestParam String appid,@RequestBody WxUserBatchTaggingForm form) throws WxErrorException{
         wxMpService.switchoverTo(appid);
         wxUserTagsService.batchTagging(form.getTagid(),form.getOpenidList());
         return R.ok();
@@ -79,8 +87,9 @@ public class WxUserTagsManageController {
      * 批量移除用户标签
      */
     @PostMapping("/batchUnTagging")
-    @RequiresPermissions("wx:wxuser:save")
-    public R batchUnTagging(@CookieValue String appid,@RequestBody WxUserBatchTaggingForm form) throws WxErrorException{
+    @ApiOperation("批量移除用户标签")
+//    @RequiresPermissions("wx:wxuser:save")
+    public R batchUnTagging(@RequestParam String appid,@RequestBody WxUserBatchTaggingForm form) throws WxErrorException{
         wxMpService.switchoverTo(appid);
         wxUserTagsService.batchUnTagging(form.getTagid(),form.getOpenidList());
         return R.ok();

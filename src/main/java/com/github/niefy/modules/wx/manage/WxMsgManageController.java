@@ -1,10 +1,13 @@
 package com.github.niefy.modules.wx.manage;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.github.niefy.modules.wx.form.WxMsgReplyForm;
 import com.github.niefy.modules.wx.service.MsgReplyService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import com.github.niefy.common.utils.R;
  */
 @RestController
 @RequestMapping("/manage/wxMsg")
+@Api(tags = "微信消息相关接口")
 public class WxMsgManageController {
     @Autowired
     private WxMsgService wxMsgService;
@@ -37,8 +41,13 @@ public class WxMsgManageController {
      * 列表
      */
     @GetMapping("/list")
-    @RequiresPermissions("wx:wxmsg:list")
-    public R list(@CookieValue String appid,@RequestParam Map<String, Object> params){
+    @ApiOperation("获取消息列表")
+//    @RequiresPermissions("wx:wxmsg:list")
+    public R list(@RequestParam String appid){
+        Map<String,Object> params = new HashMap<>();
+        params.put("msgTypes","");
+        params.put("startTime","");
+        params.put("openid","");
         params.put("appid",appid);
         PageUtils page = wxMsgService.queryPage(params);
 
@@ -50,7 +59,8 @@ public class WxMsgManageController {
      * 信息
      */
     @GetMapping("/info/{id}")
-    @RequiresPermissions("wx:wxmsg:info")
+    @ApiOperation("获取消息信息")
+//    @RequiresPermissions("wx:wxmsg:info")
     public R info(@CookieValue String appid,@PathVariable("id") Long id){
 		WxMsg wxMsg = wxMsgService.getById(id);
 
@@ -61,8 +71,9 @@ public class WxMsgManageController {
      * 回复
      */
     @PostMapping("/reply")
-    @RequiresPermissions("wx:wxmsg:save")
-    public R reply(@CookieValue String appid,@RequestBody WxMsgReplyForm form){
+    @ApiOperation("回复消息信息")
+//    @RequiresPermissions("wx:wxmsg:save")
+    public R reply( String appid,@RequestBody WxMsgReplyForm form){
 
         msgReplyService.reply(form.getOpenid(),form.getReplyType(),form.getReplyContent());
         return R.ok();
@@ -72,7 +83,8 @@ public class WxMsgManageController {
      * 删除
      */
     @PostMapping("/delete")
-    @RequiresPermissions("wx:wxmsg:delete")
+    @ApiOperation("删除消息信息")
+//    @RequiresPermissions("wx:wxmsg:delete")
     public R delete(@CookieValue String appid,@RequestBody Long[] ids){
 		wxMsgService.removeByIds(Arrays.asList(ids));
 
