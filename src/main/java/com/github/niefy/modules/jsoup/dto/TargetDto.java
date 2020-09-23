@@ -22,6 +22,7 @@ public class TargetDto {
     @ApiModelProperty(value = "封面图包含字段")
     private String imgContains;
 
-
+    @ApiModelProperty(value = "目标网址url")
+    private String hostUrl;
 
 }
