@@ -21,7 +21,7 @@
 		<mybatisplus.version>3.3.2</mybatisplus.version>
 		<mysql.version>8.0.17</mysql.version>
 		<druid.version>1.1.22</druid.version>
-		<shiro.version>1.5.3</shiro.version>
+		<shiro.version>1.9.1</shiro.version>
 		<jwt.version>0.9.1</jwt.version>
 		<kaptcha.version>0.0.9</kaptcha.version>
         <!--七牛云-->
